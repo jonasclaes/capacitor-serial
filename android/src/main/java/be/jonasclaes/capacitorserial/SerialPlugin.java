@@ -19,4 +19,52 @@ public class SerialPlugin extends Plugin {
         ret.put("value", implementation.echo(value));
         call.resolve(ret);
     }
+
+    @PluginMethod(returnType = PluginMethod.RETURN_CALLBACK)
+    public void registerUsbAttachedDetachedCallback(PluginCall call) {
+        call.resolve(implementation.registerUsbAttachedDetachedCallback(getActivity(), call));
+    }
+
+    @PluginMethod
+    public void devices(PluginCall call) {
+        call.resolve(implementation.devices(getActivity()));
+    }
+
+    @PluginMethod
+    public void open(PluginCall call) {
+        implementation.openSerial(getActivity(), call);
+    }
+
+    @PluginMethod
+    public void close(PluginCall call) {
+        call.resolve(implementation.closeSerial());
+    }
+
+    @PluginMethod
+    public void read(PluginCall call) {
+        call.resolve(implementation.readSerial());
+    }
+
+    @PluginMethod
+    public void write(PluginCall call) {
+        String data = call.hasOption("data") ? call.getString("data") : "";
+        call.resolve(implementation.writeSerial(data));
+    }
+
+    @Override
+    protected void handleOnResume() {
+        super.handleOnResume();
+        implementation.onResume();
+    }
+
+    @Override
+    protected void handleOnPause() {
+        implementation.onPause();
+        super.handleOnPause();
+    }
+
+    @PluginMethod(returnType = PluginMethod.RETURN_CALLBACK)
+    public void registerReadCallback(PluginCall call) {
+        call.resolve(implementation.registerReadCallback(call));
+    }
 }
